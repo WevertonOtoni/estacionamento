@@ -22,4 +22,25 @@ class Usuarios extends CI_Controller
 		$this->load->view('usuarios/index');
 		$this->load->view('layout/footer');
 	}
+
+	public function core($usuario_id = NULL)
+	{
+		if (!$usuario_id) {
+		} else {
+			if (!$this->ion_auth->user($usuario_id)->row()) {
+			} else {
+				$data = array(
+					'titulo' => 'Editar Usuário',
+					'sub_titulo' => 'Editando usuário',
+					'icone_view' => 'ik ik-users',
+					'usuario' => $this->ion_auth->user($usuario_id)->row()
+				);
+
+
+				$this->load->view('layout/header', $data);
+				$this->load->view('usuarios/core');
+				$this->load->view('layout/footer');
+			}
+		}
+	}
 }

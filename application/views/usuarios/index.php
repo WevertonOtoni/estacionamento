@@ -44,6 +44,7 @@
 										<th>Usuário</th>
 										<th>E-mail</th>
 										<th>Nome</th>
+										<th>Perfil de acesso</th>
 										<th>Ativo</th>
 										<th class="nosort text-right">Ações</th>
 										<th class="nosort">&nbsp;</th>
@@ -57,14 +58,23 @@
 											<td><?php echo $usuario->username; ?></td>
 											<td><?php echo $usuario->email; ?></td>
 											<td><?php echo $usuario->first_name; ?></td>
+											<td><?php echo ($this->ion_auth->is_admin($usuario->id)) ?
+													'Administrador' : 'Atendente' ?></td>
 											<td><?php echo ($usuario->active == 1 ?
 													'<span class="badge badge-pill badge-success mb-1">Sim</span>' :
 													'<span class="badge badge-pill badge-danger mb-1">Não</span>'); ?>
 											</td>
 											<td class="text-right">
 												<div class="table-actions">
-													<a title="Editar" href="#" class="btn btn-icon btn-primary"><i class="ik ik-edit-2"></i></a>
-													<a title="Excluir" href="#" class="btn btn-icon btn-danger"><i class="ik ik-trash-2"></i></a>
+													<a data-toggle="tooltip" data-placement="bottom" title="Editar 
+													<?php echo $this->router->fetch_class() ?>" href="
+													<?php echo base_url('usuarios/core/' . $usuario->id) ?>" class="btn btn-icon btn-primary">
+														<i class="ik ik-edit-2"></i>
+													</a>
+													<a data-toggle="tooltip" data-placement="bottom" title="Excluir
+													<?php echo $this->router->fetch_class() ?>" href="#" class="btn btn-icon btn-danger">
+														<i class="ik ik-trash-2"></i>
+													</a>
 												</div>
 											</td>
 											<td>&nbsp;</td>
