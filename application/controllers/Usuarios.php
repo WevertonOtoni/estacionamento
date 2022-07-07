@@ -31,12 +31,29 @@ class Usuarios extends CI_Controller
 			} else {
 				$this->form_validation->set_rules('first_name', 'Nome', 'trim|required|min_length[1]|max_length[20]');
 				$this->form_validation->set_rules('last_name', 'Sobrenome', 'trim|required|min_length[1]|max_length[20]');
-				$this->form_validation->set_rules('username', 'Usuário', 'trim|required|min_length[1]|max_length[20]');
-				$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email');
+				$this->form_validation->set_rules('username', 'Usuário', 'trim|required|min_length[1]|max_length[20]|callback_username_check');
+				$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email|callback_email_check');
 				$this->form_validation->set_rules('password', 'Senha', 'trim|min_length[8]');
 				$this->form_validation->set_rules('confirmacao', 'Confirmação', 'trim|matches[password]');
 
+
 				if ($this->form_validation->run()) {
+					$data = elements(array('first_name', 'last_name', 'user_name', 'email', 'password', 'active'), $this->input->post());
+					$password = $this->input->post('password');
+
+					if (!$password) {
+						unset($data['password']);
+					}
+
+					$data = html_escape($data);
+
+					if ($this->ion_auth->update($usuario_id, $data)) {
+						$this->session->set_flashdata('sucesso', 'Dados salvos com sucesso');
+					} else {
+						$this->session->set_flashdata('erro', 'Não foi possível salvar os dados ');
+					}
+
+					redirect($this->router->fetch_class());
 				} else {
 					$data = array(
 						'titulo' => 'Editar Usuário',
@@ -52,6 +69,30 @@ class Usuarios extends CI_Controller
 					$this->load->view('layout/footer');
 				}
 			}
+		}
+	}
+
+	public function username_check($str)
+	{
+		$usuario_id = $this->input->post('usuario_id');
+
+		if ($this->core_model->get_by_id('users', array('username' => $str, 'id !=' => $usuario_id))) {
+			$this->form_validation->set_message('username_check', 'O {field} já existe');
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+	public function email_check($str)
+	{
+		$usuario_id = $this->input->post('usuario_id');
+
+		if ($this->core_model->get_by_id('users', array('username' => $str, 'id !=' => $usuario_id))) {
+			$this->form_validation->set_message('email_check', 'O {field} já existe');
+			return FALSE;
+		} else {
+			return TRUE;
 		}
 	}
 }
