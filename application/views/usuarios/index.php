@@ -21,7 +21,7 @@
 						<nav class="breadcrumb-container" aria-label="breadcrumb">
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item">
-									<a title="Home" href="<?php echo base_url('/') ?>"><i class="ik ik-home"></i></a>
+									<a data-toggle="tooltip" data-placement="bottom" title="Home" href="<?php echo base_url('/') ?>"><i class="ik ik-home"></i></a>
 								</li>
 								<li class="breadcrumb-item active" aria-current="page"><?php echo $titulo; ?></li>
 							</ol>

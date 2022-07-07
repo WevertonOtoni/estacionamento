@@ -29,17 +29,28 @@ class Usuarios extends CI_Controller
 		} else {
 			if (!$this->ion_auth->user($usuario_id)->row()) {
 			} else {
-				$data = array(
-					'titulo' => 'Editar Usuário',
-					'sub_titulo' => 'Editando usuário',
-					'icone_view' => 'ik ik-users',
-					'usuario' => $this->ion_auth->user($usuario_id)->row()
-				);
+				$this->form_validation->set_rules('first_name', 'Nome', 'trim|required|min_length[1]|max_length[20]');
+				$this->form_validation->set_rules('last_name', 'Sobrenome', 'trim|required|min_length[1]|max_length[20]');
+				$this->form_validation->set_rules('username', 'Usuário', 'trim|required|min_length[1]|max_length[20]');
+				$this->form_validation->set_rules('email', 'E-mail', 'trim|required|valid_email');
+				$this->form_validation->set_rules('password', 'Senha', 'trim|min_length[8]');
+				$this->form_validation->set_rules('confirmacao', 'Confirmação', 'trim|matches[password]');
+
+				if ($this->form_validation->run()) {
+				} else {
+					$data = array(
+						'titulo' => 'Editar Usuário',
+						'sub_titulo' => 'Editando usuário',
+						'icone_view' => 'ik ik-users',
+						'usuario' => $this->ion_auth->user($usuario_id)->row(),
+						'perfil_usuario' => $this->ion_auth->get_users_groups($usuario_id)->row()
+					);
 
 
-				$this->load->view('layout/header', $data);
-				$this->load->view('usuarios/core');
-				$this->load->view('layout/footer');
+					$this->load->view('layout/header', $data);
+					$this->load->view('usuarios/core');
+					$this->load->view('layout/footer');
+				}
 			}
 		}
 	}
