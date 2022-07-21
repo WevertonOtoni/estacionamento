@@ -43,11 +43,26 @@
 				</div>
 			<?php endif; ?>
 
+			<?php if ($message = $this->session->flashdata('erro')) : ?>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							<strong><?php echo $message ?></strong>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<i class="ik ik-x"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
 			<div class="row">
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							<a href="#" class="btn btn-success">Novo</a>
+							<a data-toggle="tooltip" data-placement="bottom" title="Cadastrar <?php echo $this->router->fetch_class() ?>" href="
+							    <?php echo base_url($this->router->fetch_class() . '/core/'); ?>" class="btn btn-success">Novo</a>
+							</a>
 						</div>
 						<div class="card-body">
 							<table class="table data-table">
@@ -74,25 +89,43 @@
 											<td><?php echo ($this->ion_auth->is_admin($usuario->id)) ?
 													'Administrador' : 'Atendente' ?></td>
 											<td><?php echo ($usuario->active == 1 ?
-													'<span class="badge badge-pill badge-success mb-1">Sim</span>' :
-													'<span class="badge badge-pill badge-danger mb-1">Não</span>'); ?>
+													'<span class="badge badge-pill badge-success mb-1"><i class="fa fa-lock-open"></i>&nbsp;Sim</span>' :
+													'<span class="badge badge-pill badge-danger mb-1"><i class="fa fa-lock-open"></i>&nbsp;Não</span>'); ?>
 											</td>
 											<td class="text-right">
 												<div class="table-actions">
 													<a data-toggle="tooltip" data-placement="bottom" title="Editar 
 													<?php echo $this->router->fetch_class() ?>" href="
-													<?php echo base_url('usuarios/core/' . $usuario->id) ?>" class="btn btn-icon btn-primary">
+													<?php echo base_url($this->router->fetch_class() . '/core/' . $usuario->id) ?>" class="btn btn-icon btn-primary">
 														<i class="ik ik-edit-2"></i>
 													</a>
-													<a data-toggle="tooltip" data-placement="bottom" title="Excluir
-													<?php echo $this->router->fetch_class() ?>" href="#" class="btn btn-icon btn-danger">
+													<button type="button" class="btn btn-icon btn-danger" data-toggle="modal" title="Excluir <?php echo $this->router->fetch_class() ?>" data-target="#user-<?php echo $usuario->id; ?>">
 														<i class="ik ik-trash-2"></i>
-													</a>
+													</button>
 												</div>
 											</td>
 											<td>&nbsp;</td>
 											<td>&nbsp;</td>
 										</tr>
+										<div class="modal fade" id="user-<?php echo $usuario->id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterLabel" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalCenterLabel"><i class="fas fa-exclamation-triangle text-warning"></i>&nbsp;Exclusão do registro</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+													</div>
+													<div class="modal-body">
+														<p>Deseja realmente excluir o registro?</p>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+														<a class="btn btn-primary" href="<?php echo base_url($this->router->fetch_class() . '/del/' . $usuario->id) ?>">
+															Sim
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
 									<?php endforeach; ?>
 								</tbody>
 							</table>
